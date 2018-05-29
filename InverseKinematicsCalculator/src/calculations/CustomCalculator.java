@@ -84,8 +84,8 @@ public class CustomCalculator {
 
 	public Point3D[] generateRandPoints(int numPoints) {
 		Point3D[] randPoints = new Point3D[numPoints];
-		Random rand = new Random();
-//		Random rand = new Random(7);
+//		Random rand = new Random();
+		Random rand = new Random(7);
 		for (int i = 0; i < numPoints; i++) {
 			double dist = totalLength * rand.nextDouble();
 			double angleXZ = 2 * Math.PI * rand.nextDouble();
@@ -132,7 +132,7 @@ public class CustomCalculator {
 			}
 		}
 
-		System.out.println("Inputs: ");
+//		System.out.println("Inputs: ");
 //		System.out.print("([");
 		pw.print("([");
 		for (int i = 0; i < randPts.length; i++) {
@@ -151,27 +151,28 @@ public class CustomCalculator {
 //		System.out.println("])");
 		pw.println("])");
 
-		System.out.println("Outputs: ");
-		File fileOutput = new File("Output.txt");
-		pw = new PrintWriter(fileOutput);
+//		System.out.println("Outputs: ");
+		File fileOutput = new File("Outputs.txt");
+		PrintWriter pw1 = new PrintWriter(fileOutput);
 //		System.out.print("([");
-		pw.print("([");
+		pw1.print("([");
 		for (int i = 0; i < randPts.length; i++) {
 			if (i == randPts.length - 1) {
 //				System.out.print("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
-				pw.print("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
+				pw1.print("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
 			}
 
 			else {
 //				System.out.println("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
-				pw.println("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
+				pw1.println("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
 			}
 //			System.out.println("The values " + randAngles[i][0] + ", " + randAngles[i][1] + ", and " + randAngles[i][2] + " were generated for " + randPts[i]);
 		}
 		
 //		System.out.println("])");
-		pw.println("])");
+		pw1.println("])");
 		pw.close();
+		pw1.close();
 		scan.close();
 	}
 }
