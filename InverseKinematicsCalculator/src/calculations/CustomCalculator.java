@@ -73,7 +73,6 @@ public class CustomCalculator {
 		return angles;
 	}
 
-
 	private double distance(double ox, double oy, double oz, double ex, double ey, double ez) {
 		return Math.sqrt(Math.pow(ex - ox, 2) + Math.pow(ey - oy, 2) + Math.pow(ez - oz, 2));
 	}
@@ -84,7 +83,6 @@ public class CustomCalculator {
 
 	public Point3D[] generateRandPoints(int numPoints) {
 		Point3D[] randPoints = new Point3D[numPoints];
-//		Random rand = new Random();
 		Random rand = new Random(7);
 		for (int i = 0; i < numPoints; i++) {
 			double dist = totalLength * rand.nextDouble();
@@ -99,6 +97,44 @@ public class CustomCalculator {
 
 		return randPoints;
 	}
+	
+	public void printNewNetworkPts(int numPoints) {
+		Point3D[] randPts = generateRandPoints(numPoints);
+		double[][] randAngles = new double[numPoints][3];
+		for (int i = 0; i < randPts.length; i++) {
+			double[] newValues = calculateArmAngles(randPts[i]);
+			for (int j = 0; j < newValues.length; j++) {
+				randAngles[i][j] = newValues[j];
+			}
+		}
+		
+		System.out.println("Inputs: ");
+		System.out.print("([");
+		for (int i = 0; i < randPts.length; i++) {
+			if (i == randPts.length - 1) {
+				System.out.print("[" + (randPts[i].getZ() + totalLength)/(totalLength*2)/(randPts[i].getX() + totalLength)/(totalLength*2) + "]");
+			}
+
+			else {
+				System.out.println("[" + (randPts[i].getZ() + totalLength)/(totalLength*2)/(randPts[i].getX() + totalLength)/(totalLength*2) + "], ");
+			}
+		}
+		
+		System.out.println("])");
+		System.out.println("Outputs: ");
+		System.out.print("([");
+		for (int i = 0; i < randPts.length; i++) {
+			if (i == randPts.length - 1) {
+				System.out.print("[" + randAngles[i][0]/360 + "]");
+			}
+
+			else {
+				System.out.println("[" + randAngles[i][0]/360 + "], ");
+			}
+		}
+
+		System.out.println("])");
+	}
 
 	public static void main(String[] args) throws FileNotFoundException {
 		double[] armDist = new double[2];
@@ -109,6 +145,8 @@ public class CustomCalculator {
 		armDist[1] = scan.nextDouble();
 		File file = new File("Inputs.txt");
 		PrintWriter pw = new PrintWriter(file);
+		File fileOutput = new File("Outputs.txt");
+		PrintWriter pw1 = new PrintWriter(fileOutput);
 		CustomCalculator calc = new CustomCalculator(armDist);
 		//		System.out.println("What is the x value of the target point?: ");
 		//		double x = scan.nextDouble();
@@ -123,54 +161,82 @@ public class CustomCalculator {
 		//		System.out.println("Servo 2 AoR = " + angles[2]);
 		System.out.println("How many data points would you like to generate?: ");
 		int numPoints = scan.nextInt();
-		Point3D[] randPts = calc.generateRandPoints(numPoints);
-		double[][] randAngles = new double[numPoints][3];
-		for (int i = 0; i < randPts.length; i++) {
-			double[] newValues = calc.calculateArmAngles(randPts[i]);
-			for (int j = 0; j < newValues.length; j++) {
-				randAngles[i][j] = newValues[j];
-			}
-		}
-
-//		System.out.println("Inputs: ");
-//		System.out.print("([");
-		pw.print("([");
-		for (int i = 0; i < randPts.length; i++) {
-			if (i == randPts.length - 1) {
-//				System.out.print("[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "]");
-				pw.print("[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "]");
-			}
-
-			else {
-//				System.out.println("[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "], ");
-				pw.println("[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "], ");
-			}
-//			System.out.println("The values " + randAngles[i][0] + ", " + randAngles[i][1] + ", and " + randAngles[i][2] + " were generated for " + randPts[i]);
-		}
-
-//		System.out.println("])");
-		pw.println("])");
-
-//		System.out.println("Outputs: ");
-		File fileOutput = new File("Outputs.txt");
-		PrintWriter pw1 = new PrintWriter(fileOutput);
-//		System.out.print("([");
-		pw1.print("([");
-		for (int i = 0; i < randPts.length; i++) {
-			if (i == randPts.length - 1) {
-//				System.out.print("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
-				pw1.print("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
-			}
-
-			else {
-//				System.out.println("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
-				pw1.println("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
-			}
-//			System.out.println("The values " + randAngles[i][0] + ", " + randAngles[i][1] + ", and " + randAngles[i][2] + " were generated for " + randPts[i]);
-		}
+		calc.printNewNetworkPts(numPoints);
+//		if (numPoints != 1) {
+//			Point3D[] randPts = calc.generateRandPoints(numPoints);
+//			double[][] randAngles = new double[numPoints][3];
+//			for (int i = 0; i < randPts.length; i++) {
+//				double[] newValues = calc.calculateArmAngles(randPts[i]);
+//				for (int j = 0; j < newValues.length; j++) {
+//					randAngles[i][j] = newValues[j];
+//				}
+//			}
+//
+//			pw.print("([");
+//			for (int i = 0; i < randPts.length; i++) {
+//				if (i == randPts.length - 1) {
+//					pw.print("[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "]");
+//				}
+//
+//				else {
+//					pw.println("[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "], ");
+//				}
+//			}
+//
+//			pw.println("])");
+//			pw1.print("([");
+//			for (int i = 0; i < randPts.length; i++) {
+//				if (i == randPts.length - 1) {
+//					pw1.print("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
+//				}
+//
+//				else {
+//					pw1.println("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
+//				}
+//			}
+//
+//			pw1.println("])");
+//		}
+//
+//		else {
+//			Point3D[] randPts = calc.generateRandPoints(numPoints);
+//			double[][] randAngles = new double[numPoints][3];
+//			for (int i = 0; i < randPts.length; i++) {
+//				double[] newValues = calc.calculateArmAngles(randPts[i]);
+//				for (int j = 0; j < newValues.length; j++) {
+//					randAngles[i][j] = newValues[j];
+//				}
+//			}
+//
+//			System.out.println("Inputs: ");
+//			System.out.print("([");
+//			for (int i = 0; i < randPts.length; i++) {
+//				if (i == randPts.length - 1) {
+//					System.out.print("[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "]");
+//				}
+//
+//				else {
+//					System.out.println("[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "], ");
+//				}
+//			}
+//
+//			System.out.println("])");
+//			System.out.println("Outputs: ");
+//			System.out.print("([");
+//			for (int i = 0; i < randPts.length; i++) {
+//				if (i == randPts.length - 1) {
+//					System.out.print("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
+//				}
+//
+//				else {
+//					System.out.println("[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
+//				}
+//			}
+//
+//			System.out.println("])");
+//		}
+//		
 		
-//		System.out.println("])");
-		pw1.println("])");
 		pw.close();
 		pw1.close();
 		scan.close();
