@@ -237,6 +237,7 @@ public class CustomCalculator {
 //		}
 //		
 		
+		System.out.println();
 		pw.close();
 		pw1.close();
 		scan.close();
