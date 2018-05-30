@@ -114,8 +114,8 @@ Y = np.array([[0.749169603133633],
 [0.7106150222851793], 
 [0.9559296505394873]])
 
-syn0 = 2 * np.random.random((1, 30)) - 1
-syn1 = 2 * np.random.random((30, 1)) - 1
+syn0 = 2 * np.random.random((1, 20)) - 1
+syn1 = 2 * np.random.random((20, 1)) - 1
 for iter in xrange(60000):
     l0 = X
     l1 = nonlin(np.dot(l0, syn0))
