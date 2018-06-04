@@ -513,13 +513,15 @@ Y = np.array([[0.07099203475193139],
 syn0 = 2 * np.random.random((2, 30)) - 1
 syn1 = 2 * np.random.random((30, 1)) - 1
 l0 = X
-for iter in xrange(100000000):
+iters = 100000000
+for iter in xrange(iters):
     l1 = nonlin(np.dot(l0, syn0))
     l2 = nonlin(np.dot(l1, syn1))
     l2_error = Y - l2
 #    prev_error = np.mean(np.abs(l2_error))
     if (iter%10000) == 0:
-        print "Error:" + str(np.mean(np.abs(l2_error)))
+        print "Error: " + str(np.mean(np.abs(l2_error)) * 100) + "%"
+        print (iter/iters) * 100 + "% complete"
         
 #    if (np.mean(np.abs(l2_error)) == prev_error): 
 #        syn0 = 2 * np.random.random((2, 30)) - 1
