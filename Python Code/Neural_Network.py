@@ -510,10 +510,10 @@ Y = np.array([[0.07099203475193139],
 [0.05462532003528798], 
 [0.7242369480506904]])
 
-syn0 = 2 * np.random.random((2, 15)) - 1
-syn1 = 2 * np.random.random((15, 1)) - 1
+syn0 = 2 * np.random.random((2, 40)) - 1
+syn1 = 2 * np.random.random((40, 1)) - 1
 l0 = X
-iters = 10000000
+iters = 1000000000
 prev_error = 0
 for iter in xrange(iters):
     l1 = nonlin(np.dot(l0, syn0))
@@ -521,7 +521,7 @@ for iter in xrange(iters):
     l2_error = Y - l2
     prev_error += np.mean(np.abs(l2_error)) * 100
     if (iter%10000) == 0:
-        print "Average Error: " + str(prev_error/iter) + "%"
+        print "Average Error: " + str(prev_error/(iter + 1)) + "%"
         print str((iter * 100)/iters) + "% complete"
         
 #    if (np.mean(np.abs(l2_error)) == prev_error): 
@@ -537,5 +537,6 @@ for iter in xrange(iters):
 #print "Correct output"
 #print "[[0.07161018169493694]]"
 print "Output after training"
-l0 = np.array([[1.8818090457600445, 3.9351914689555136]])
+l0 = np.array([[0.5133270861115978, 1.150123935283164]])
+print "Correct output" + 0.06681199714290154
 print nonlin(np.dot(nonlin(np.dot(l0, syn0)), syn1))
