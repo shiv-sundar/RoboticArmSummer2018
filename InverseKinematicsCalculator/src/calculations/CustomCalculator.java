@@ -61,7 +61,7 @@ public class CustomCalculator {
 			}
 
 			else {
-				angles[0] = 360 + Math.toDegrees(Math.atan2(endPoint.getZ(), endPoint.getX()));
+				angles[0] = Math.toDegrees(Math.atan2(endPoint.getZ(), endPoint.getX()));
 			}
 
 			double newDist = distance(0, 0, 0, endPoint.getX(), 0, endPoint.getZ());
@@ -83,7 +83,7 @@ public class CustomCalculator {
 
 	public Point3D[] generateRandPoints(int numPoints) {
 		Point3D[] randPoints = new Point3D[numPoints];
-		Random rand = new Random(7);
+		Random rand = new Random(3);
 		for (int i = 0; i < numPoints; i++) {
 			double dist = totalLength * rand.nextDouble();
 			double angleXZ = 2 * Math.PI * rand.nextDouble();
@@ -167,78 +167,86 @@ public class CustomCalculator {
 		int numPoints = scan.nextInt();
 		//		calc.printNewNetworkPts(numPoints);
 		if (numPoints != 1) {
-			double[] test = new double[numPoints];
-			double[] angles = new double[numPoints];
-			double step = 200.0/numPoints;
-			for (int x = 0; x < numPoints; x++) {
-				test[x] = -100 + (step * x);
-				angles[x] = Math.atan(test[x]);
+//			double[] test = new double[numPoints];
+//			double[] angles = new double[numPoints];
+//			double step = 200.0/numPoints;
+//			for (int x = 0; x < numPoints; x++) {
+//				test[x] = -100 + (step * x);
+//				angles[x] = Math.atan2(test[x], 1);
+//			}
+//			
+//			System.out.println(angles);
+			Point3D[] randPts = calc.generateRandPoints(numPoints);
+			double[][] randAngles = new double[numPoints][3];
+			for (int i = 0; i < randPts.length; i++) {
+				double[] newValues = calc.calculateArmAngles(randPts[i]);
+				for (int j = 0; j < newValues.length; j++) {
+					randAngles[i][j] = newValues[j];
+				}
 			}
-//			Point3D[] randPts = calc.generateRandPoints(numPoints);
-//			double[][] randAngles = new double[numPoints][3];
-//			for (int i = 0; i < randPts.length; i++) {
-//				double[] newValues = calc.calculateArmAngles(randPts[i]);
-//				for (int j = 0; j < newValues.length; j++) {
-//					randAngles[i][j] = newValues[j];
-//				}
-//			}
-//
-//			pw.print("([");
-//			for (int i = 0; i < randPts.length; i++) {
-//				if (i == randPts.length - 1) {
-//					pw.print("[" + (randPts[i].getZ())/(randPts[i].getX()) + "]");
-//					//							"[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "]");
-//				}
-//
-//				else {
-//					pw.println("[" + ((randPts[i].getZ()))/((randPts[i].getX())) + "], ");
-//					//							"[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "], ");
-//				}
-//			}
-//
-//			pw.println("])");
-//			pw1.print("([");
-//			for (int i = 0; i < randPts.length; i++) {
-//				if (i == randPts.length - 1) {
-//					pw1.print("[" + randAngles[i][0]/360 + "]");
-//					//							"[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
-//				}
-//
-//				else {
-//					pw1.println("[" + randAngles[i][0]/360 + "], ");
-//					//							"[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
-//				}
-//			}
-//
-//			pw1.println("])");
+			
+			for (int i = 0; i < randAngles.length; i++) {
+				if (randAngles[i][0] < 0) {
+					System.out.println("negative");
+				}
+			}
+
 			pw.print("([");
-			for (int i = 0; i < test.length; i++) {
-				if (i == test.length - 1) {
-					pw.print("[" + (test[i]) + "]");
+			for (int i = 0; i < randPts.length; i++) {
+				if (i == randPts.length - 1) {
+					pw.print("[" + (randPts[i].getZ()) + ", " + (randPts[i].getX()) + "]");
 					//							"[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "]");
 				}
 
 				else {
-					pw.println("[" + (test[i]) + "], ");
+					pw.println("[" + ((randPts[i].getZ())) + ", " + ((randPts[i].getX())) + "], ");
 					//							"[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "], ");
 				}
 			}
-			
+
 			pw.println("])");
 			pw1.print("([");
-			for (int i = 0; i < angles.length; i++) {
-				if (i == angles.length - 1) {
-					pw1.print("[" + angles[i] + "]");
+			for (int i = 0; i < randPts.length; i++) {
+				if (i == randPts.length - 1) {
+					pw1.print("[" + randAngles[i][0]/360 + "]");
 					//							"[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
 				}
 
 				else {
-					pw1.println("[" + angles[i] + "], ");
+					pw1.println("[" + randAngles[i][0]/360 + "], ");
 					//							"[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
 				}
 			}
-			
+
 			pw1.println("])");
+//			pw.print("([");
+//			for (int i = 0; i < randPts.length; i++) {
+////				if (i == test.length - 1) {
+////					pw.print("[" + (test[i]) + "]");
+////					//							"[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "]");
+////				}
+////
+////				else {
+//					pw.println("" + randPts[i].getX() + " ");
+//					//							"[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "], ");
+////				}
+//			}
+//			
+//			pw.println("])");
+//			pw1.print("([");
+//			for (int i = 0; i < randAngles.length; i++) {
+////				if (i == angles.length - 1) {
+////					pw1.print("[" + angles[i] + "]");
+////					//							"[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "]");
+////				}
+////
+////				else {
+//					pw1.println("" + randAngles[i] + " ");
+//					//							"[" + randAngles[i][0]/360 + ", " + (randAngles[i][1] + 360)/720 + ", " + randAngles[i][2]/180 + "], ");
+////				}
+//			}
+//			
+//			pw1.println("])");
 			System.out.println("Data points generated");
 		}
 
@@ -253,7 +261,7 @@ public class CustomCalculator {
 			}
 
 			System.out.println("Inputs: ");
-			System.out.println("([[" + (randPts[0].getZ())/(randPts[0].getX()) + "]])");
+			System.out.println("([[" + (randPts[0].getZ()) + ", " + (randPts[0].getX()) + "]])");
 			System.out.println("Outputs: ");
 			System.out.println("([[" + randAngles[0][0]/360 + "]])");
 		}
