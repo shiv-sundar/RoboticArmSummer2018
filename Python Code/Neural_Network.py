@@ -522,21 +522,15 @@ for iter in xrange(iters):
     prev_error += np.mean(np.abs(l2_error)) * 100
     if (iter%10000) == 0:
         print "Average Error: " + str(prev_error/(iter + 1)) + "%"
-        print str((iter * 100)/iters) + "% complete"
-        
-#    if (np.mean(np.abs(l2_error)) == prev_error): 
-#        syn0 = 2 * np.random.random((2, 30)) - 1
+        print str((float)(iter * 100)/iters) + "% complete"
 
     l2_delta = l2_error * nonlin(l2, deriv=True) * .1
     l1_error = l2_delta.dot(syn1.T)
     l1_delta = l1_error * nonlin(l1, deriv=True) * .1
-#    l1_delta = l1_error * .1
     syn1 += l1.T.dot(l2_delta)
     syn0 += l0.T.dot(l1_delta)
-#    print np.sum(l1_error)
-#print "Correct output"
-#print "[[0.07161018169493694]]"
+
 print "Output after training"
 l0 = np.array([[0.5133270861115978, 1.150123935283164]])
-print "Correct output" + 0.06681199714290154
 print nonlin(np.dot(nonlin(np.dot(l0, syn0)), syn1))
+print "Correct output" + 0.06681199714290154
