@@ -7,7 +7,7 @@ def nonlin(x, deriv = False):
         return x * (1 - x)
     return 1/(1+np.exp(-x))
 
-#np.random.seed(1)
+np.random.seed(1)
 X = np.array([[1.8818090457600445, 3.9351914689555136], 
 [2.3204198927511026, 0.33270442688046065], 
 [0.26348918383580827, 1.38990732387288], 
@@ -510,18 +510,19 @@ Y = np.array([[0.07099203475193139],
 [0.05462532003528798], 
 [0.7242369480506904]])
 
-syn0 = 2 * np.random.random((2, 30)) - 1
-syn1 = 2 * np.random.random((30, 1)) - 1
+syn0 = 2 * np.random.random((2, 15)) - 1
+syn1 = 2 * np.random.random((15, 1)) - 1
 l0 = X
-iters = 100000000
+iters = 10000000
+prev_error = 0
 for iter in xrange(iters):
     l1 = nonlin(np.dot(l0, syn0))
     l2 = nonlin(np.dot(l1, syn1))
     l2_error = Y - l2
-#    prev_error = np.mean(np.abs(l2_error))
+    prev_error += np.mean(np.abs(l2_error)) * 100
     if (iter%10000) == 0:
-        print "Error: " + str(np.mean(np.abs(l2_error)) * 100) + "%"
-        print (iter/iters) * 100 + "% complete"
+        print "Average Error: " + str(prev_error/iter) + "%"
+        print str((iter * 100)/iters) + "% complete"
         
 #    if (np.mean(np.abs(l2_error)) == prev_error): 
 #        syn0 = 2 * np.random.random((2, 30)) - 1
