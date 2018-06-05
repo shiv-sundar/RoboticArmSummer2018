@@ -16,5 +16,3 @@ The first process is written in Java. This is because of my familiarity with Jav
 Process 2 is written in Python. Python is considered to be a language that can perform complex matrix operations efficiently.
 
 Process 3 will be completed in C. This is for the Arduino Due controlling the arm's servos. Because of the limitations of computing power, training of the network is in Python.
-
-RoboticArmSummer2018/network_prediction.png
