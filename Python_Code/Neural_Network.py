@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 def nonlin(x, deriv = False):
     if (deriv == True):
@@ -515,12 +516,17 @@ syn1 = 2 * np.random.random((40, 1)) - 1
 l0 = X
 iters = 100000000
 prev_error = 0
+prev2_error = 0
 for iter in xrange(iters):
     l1 = nonlin(np.dot(l0, syn0))
     l2 = nonlin(np.dot(l1, syn1))
     l2_error = Y - l2
+    prev2_error = prev_error/iter
     prev_error += np.mean(np.abs(l2_error)) * 100
+    if (prev2_error > prev_error/(iter + 1)):
+        break
     if (iter%10000) == 0:
+        print "Previous Error: " + str(prev2_error/(iter + 1)) + "%"
         print "Average Error: " + str(prev_error/(iter + 1)) + "%"
         print str((float)(iter * 100)/iters) + "% complete"
 
@@ -533,4 +539,4 @@ for iter in xrange(iters):
 print "Output after training"
 l0 = np.array([[0.5133270861115978, 1.150123935283164]])
 print nonlin(np.dot(nonlin(np.dot(l0, syn0)), syn1))
-print "Correct output" + 0.06681199714290154
+print "Correct output" + str(0.06681199714290154)

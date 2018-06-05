@@ -31,7 +31,7 @@ public class CustomCalculator {
 			angles[2] = 0;
 		}
 
-		else if (endPoint.getX() == totalLength * -1) {
+		else if (endPoint.getX() == -totalLength) {
 			angles[0] = 180;
 			angles[1] = 0;
 			angles[2] = 0;
@@ -49,7 +49,7 @@ public class CustomCalculator {
 			angles[2] = 180;
 		}
 
-		else if (endPoint.getZ() == totalLength * -1) {
+		else if (endPoint.getZ() == -totalLength) {
 			angles[0] = 270;
 			angles[1] = 0;
 			angles[2] = 180;
@@ -82,9 +82,10 @@ public class CustomCalculator {
 	}
 
 	public Point3D[] generateRandPoints(int numPoints) {
-		Point3D[] randPoints = new Point3D[numPoints];
-		Random rand = new Random();
-		for (int i = 0; i < numPoints; i++) {
+		Point3D[] randPoints = new Point3D[numPoints + 5];
+		Random rand = new Random(7);
+		int i;
+		for (i = 0; i < numPoints; i++) {
 			double dist = totalLength * rand.nextDouble();
 			double angleXZ = 2 * Math.PI * rand.nextDouble();
 			double angleXZY = .5 * Math.PI * rand.nextDouble();
@@ -94,50 +95,13 @@ public class CustomCalculator {
 			double distZ = distXZ * Math.sin(angleXZ);
 			randPoints[i] = new Point3D(distX, distY, distZ);
 		}
-
+		
+		randPoints[numPoints] = new Point3D(totalLength, 0, 0);
+		randPoints[numPoints + 1] = new Point3D(-totalLength, 0, 0);
+		randPoints[numPoints + 2] = new Point3D(0, totalLength, 0);
+		randPoints[numPoints + 3] = new Point3D(0, 0, totalLength);
+		randPoints[numPoints + 4] = new Point3D(0, 0, -totalLength);
 		return randPoints;
-	}
-
-	public void printNewNetworkPts(int numPoints) {
-		Point3D[] randPts = generateRandPoints(numPoints);
-		double[][] randAngles = new double[numPoints][3];
-		for (int i = 0; i < randPts.length; i++) {
-			double[] newValues = calculateArmAngles(randPts[i]);
-			for (int j = 0; j < newValues.length; j++) {
-				randAngles[i][j] = newValues[j];
-			}
-		}
-
-		System.out.println("Inputs: ");
-		System.out.print("([");
-		for (int i = 0; i < randPts.length; i++) {
-			if (i == randPts.length - 1) {
-				System.out.print("[" + ((randPts[i].getZ())) + ", " + ((randPts[i].getX())) + "]");
-			}
-
-			else {
-				System.out.println("[" + ((randPts[i].getZ())) + ", " + ((randPts[i].getX())) + "], ");
-			}
-
-			//			System.out.print(randPts[i].getZ()/randPts[i].getX() + " ");
-		}
-
-		System.out.println("])");
-		System.out.println("Outputs: ");
-		System.out.print("([");
-		for (int i = 0; i < randPts.length; i++) {
-			if (i == randPts.length - 1) {
-				System.out.print("[" + randAngles[i][0]/360 + "]");
-			}
-
-			else {
-				System.out.println("[" + randAngles[i][0]/360 + "], ");
-			}
-
-			//			System.out.print(randAngles[i][0] + " ");
-		}
-
-		System.out.println("])");
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -177,7 +141,7 @@ public class CustomCalculator {
 //			
 //			System.out.println(angles);
 			Point3D[] randPts = calc.generateRandPoints(numPoints);
-			double[][] randAngles = new double[numPoints][3];
+			double[][] randAngles = new double[numPoints + 5][3];
 			for (int i = 0; i < randPts.length; i++) {
 				double[] newValues = calc.calculateArmAngles(randPts[i]);
 				for (int j = 0; j < newValues.length; j++) {
@@ -188,12 +152,12 @@ public class CustomCalculator {
 			pw.print("([");
 			for (int i = 0; i < randPts.length; i++) {
 				if (i == randPts.length - 1) {
-					pw.print("[" + (randPts[i].getZ()) + ", " + (randPts[i].getX()) + "]");
+					pw.print("[" + (randPts[i].getZ())/(randPts[i].getX()) + "]");
 					//							"[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "]");
 				}
 
 				else {
-					pw.println("[" + ((randPts[i].getZ())) + ", " + ((randPts[i].getX())) + "], ");
+					pw.println("[" + ((randPts[i].getZ()))/((randPts[i].getX())) + "], ");
 					//							"[" + (randPts[i].getX() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getY() + calc.totalLength)/(calc.totalLength*2) + ", " + (randPts[i].getZ() + calc.totalLength)/(calc.totalLength*2) + "], ");
 				}
 			}
