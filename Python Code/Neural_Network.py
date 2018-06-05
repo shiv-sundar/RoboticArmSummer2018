@@ -513,7 +513,7 @@ Y = np.array([[0.07099203475193139],
 syn0 = 2 * np.random.random((2, 40)) - 1
 syn1 = 2 * np.random.random((40, 1)) - 1
 l0 = X
-iters = 1000000000
+iters = 100000000
 prev_error = 0
 for iter in xrange(iters):
     l1 = nonlin(np.dot(l0, syn0))
