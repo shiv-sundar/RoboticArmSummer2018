@@ -7,6 +7,9 @@ def nonlin(x, deriv = False):
         return x * (1 - x)
     return 1/(1+np.exp(-x))
 
+l0 = np.array([[0.6203156003535286, 0.48865872654222453]])
+print nonlin(np.dot(nonlin(np.dot(l0, syn0)), syn1))
+
 np.random.seed(1)
 X = np.array([[1.8818090457600445, 3.9351914689555136], 
 [2.3204198927511026, 0.33270442688046065], 
