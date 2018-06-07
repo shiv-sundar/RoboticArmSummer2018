@@ -1376,9 +1376,9 @@ for iter in xrange(iters):
         print "Average Error: " + str(prev_error/(iter + 1)) + "%"
         print str((float)(iter * 100)/iters) + "% complete"
 
-    l2_delta = l2_error * nonlin(l2, deriv=True) * .1#((float)(iter)/iters)
+    l2_delta = l2_error * nonlin(l2, deriv=True) * .01#((float)(iter)/iters)
     l1_error = l2_delta.dot(syn1.T)
-    l1_delta = l1_error * nonlin(l1, deriv=True) * .1#((float)(iter)/iters)
+    l1_delta = l1_error * nonlin(l1, deriv=True) * .01#((float)(iter)/iters)
     syn1 += l1.T.dot(l2_delta)
     syn0 += l0.T.dot(l1_delta)
 
