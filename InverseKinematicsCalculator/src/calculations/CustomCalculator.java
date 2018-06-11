@@ -129,149 +129,198 @@ public class CustomCalculator {
 		return dataPoints;
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Which language is this array for? (\"a\" for Arduino, \"p\" for Python):");
-		String lang = scan.next();
-		if (lang.toCharArray()[0] == 'a' || lang.toCharArray()[0] == 'A') {
-			File arduinoIn = new File("ardInput.txt");
-			PrintWriter pwIn = new PrintWriter(arduinoIn);
-			ArrayList<Double> ALD = new ArrayList<Double>();
-			ArrayList<double[]> ALALD = new ArrayList<double[]>();
-			System.out.println("Copy the Python array:");
-			scan.useDelimiter("\r\n|[\r\n]"); 
-			String pyArray = scan.next();
-			for (int x = 0; x < 2; x++) {
-				pyArray += scan.nextLine();
-				pyArray += "\n";
-			}
+	public void servo1Array() throws FileNotFoundException {
+		Point3D[] newPts = generateRandPoints(435);
 
-			Scanner scan1 = new Scanner(pyArray);
-			Scanner scan2 = null;
-			while (scan1.hasNextLine()) {
-				scan2 = new Scanner(scan1.nextLine());
-				while (scan2.hasNextDouble()) {
-					ALD.add(scan2.nextDouble());
-				}
 
-				double[] vals = new double[ALD.size()];
-				for (int x = 0; x < ALD.size(); x++) {
-					vals[x] = ALD.get(x);
-				}
-
-				ALALD.add(vals);
-				ALD.removeAll(ALD);
-			}
-
-			double[][] testArray = new double[ALALD.size()][ALALD.get(0).length];
-			for (int x = 0; x < testArray.length; x++) {
-				for (int y = 0; y < testArray[0].length; y++) {
-					testArray[x][y] = ALALD.get(x)[y];
-				}
-			}
-
-			pwIn.println("double syn0[2][50] = {");
-			for (int x = 0; x < testArray.length; x++) {
-				pwIn.print("{");
-				for (int y = 0; y < testArray[0].length; y++) {
-					if (y == testArray[0].length - 1) {
-						pwIn.print(testArray[x][y]);
-					}
-
-					else {
-						pwIn.print(testArray[x][y] + ", ");
-					}
-				}
-
-				if (x == testArray.length - 1) {
-					pwIn.println("}");
-				}
-
-				else {
-					pwIn.println("},");
-				}
-			}
-
-			pwIn.println("};");
-			pwIn.close();
-			scan1.close();
-			scan2.close();
+		double[] vals = new double[newPts.length];
+		File pythonIn = new File("PythonInput.txt");
+		PrintWriter pwIn = new PrintWriter(pythonIn);
+		pwIn.print("([");
+		for (int x = 0; x < newPts.length; x++) {
+			vals[x] = (calculateArmAngles(newPts[x])[0])/360;
 		}
 
-		else if (lang.toCharArray()[0] == 'p' || lang.toCharArray()[0] == 'P') {
-			double[] armDist = new double[2];
-			System.out.println("Length of arm 1");
-			armDist[0] = scan.nextDouble();
-			System.out.println("Length of arm 2");
-			armDist[1] = scan.nextDouble();
-			CustomCalculator calc = new CustomCalculator(armDist);
-			File pythonIn = new File("PythonInput.txt");
-			PrintWriter pwIn = new PrintWriter(pythonIn);
-			File pythonOut = new File("PythonOutput.txt");
-			PrintWriter pwOut = new PrintWriter(pythonOut);
-			System.out.println("Split for angles: ");
-			int numPoints = scan.nextInt();
-			if (numPoints != 0) {
-				System.out.println("Split for distance: ");
-				int numDist = scan.nextInt();
-				Point3D[] newPts = calc.generateDataPoints(numPoints, numDist);
-				double[][] randAngles = new double[newPts.length][3];
-				for (int i = 0; i < newPts.length; i++) {
-					double[] newValues = calc.calculateArmAngles(newPts[i]);
-					for (int j = 0; j < newValues.length; j++) {
-						randAngles[i][j] = newValues[j];
-					}
-				}
-
-				pwIn.print("([");
-				for (int i = 0; i < newPts.length; i++) {
-					if (i == newPts.length - 1) {
-						pwIn.print("[" + (newPts[i].getZ()) + ", " + (newPts[i].getX()) + "]");
-					}
-
-					else {
-						pwIn.println("[" + ((newPts[i].getZ())) + ", " + (newPts[i].getX()) + "], ");
-					}
-				}
-
-				pwIn.println("])");
-				pwOut.print("([");
-				for (int i = 0; i < newPts.length; i++) {
-					if (i == newPts.length - 1) {
-						pwOut.print("[" + randAngles[i][0]/360 + "]");
-					}
-
-					else {
-						pwOut.println("[" + randAngles[i][0]/360 + "], ");
-					}
-				}
-
-				pwOut.println("])");
-				System.out.println("Data points generated");
+		for (int i = 0; i < newPts.length; i++) {
+			if (i == newPts.length - 1) {
+				pwIn.print("[" + (newPts[i].getZ()) + ", " + (newPts[i].getX()) + "]");
 			}
 
 			else {
-				Point3D[] randPts = calc.generateRandPoints(1);
-				double[][] randAngles = new double[1][3];
-				double[] newValues = calc.calculateArmAngles(randPts[0]);
-				for (int j = 0; j < newValues.length; j++) {
-					randAngles[0][j] = newValues[j];
-				}
+				pwIn.println("[" + ((newPts[i].getZ())) + ", " + (newPts[i].getX()) + "], ");
+			}
+		}
 
-				System.out.println("Inputs: ");
-				System.out.println("([[" + (randPts[0].getZ()) + ", " + (randPts[0].getX()) + "]])");
-				System.out.println("Outputs: ");
-				System.out.println("([[" + randAngles[0][0]/360 + "]])");
+		pwIn.println("])");
+		pwIn.close();
+		File pythonOut = new File("PythonOutput.txt");
+		PrintWriter pwOut = new PrintWriter(pythonOut);
+		pwOut.print("([");
+		for (int i = 0; i < newPts.length; i++) {
+			if (i == newPts.length - 1) {
+				pwOut.print("[" + vals[i] + "]");
 			}
 
-			pwOut.close();
-			pwIn.close();
+			else {
+				pwOut.println("[" + vals[i] + "], ");
+			}
 		}
 
-		else {
-			System.out.println("That is not a valid option");
-		}
+		pwOut.println("])");
+		pwOut.close();
+		System.out.println("Data points generated");
+	}
 
+	public static void main(String[] args) throws FileNotFoundException {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Which language is this array for? (\"a\" for Arduino, \"p\" for Python):");
+		double[] armDist = new double[2];
+		System.out.println("Length of arm 1");
+		armDist[0] = scan.nextDouble();
+		System.out.println("Length of arm 2");
+		armDist[1] = scan.nextDouble();
+		CustomCalculator calc = new CustomCalculator(armDist);
+		calc.servo1Array();
+		//		String lang = scan.next();
+		//		if (lang.toCharArray()[0] == 'a' || lang.toCharArray()[0] == 'A') {
+		//			File arduinoIn = new File("ardInput.txt");
+		//			PrintWriter pwIn = new PrintWriter(arduinoIn);
+		//			ArrayList<Double> ALD = new ArrayList<Double>();
+		//			ArrayList<double[]> ALALD = new ArrayList<double[]>();
+		//			System.out.println("Copy the Python array:");
+		//			scan.useDelimiter("\r\n|[\r\n]"); 
+		//			String pyArray = scan.next();
+		//			for (int x = 0; x < 2; x++) {
+		//				pyArray += scan.nextLine();
+		//				pyArray += "\n";
+		//			}
+		//
+		//			Scanner scan1 = new Scanner(pyArray);
+		//			Scanner scan2 = null;
+		//			while (scan1.hasNextLine()) {
+		//				scan2 = new Scanner(scan1.nextLine());
+		//				while (scan2.hasNextDouble()) {
+		//					ALD.add(scan2.nextDouble());
+		//				}
+		//
+		//				double[] vals = new double[ALD.size()];
+		//				for (int x = 0; x < ALD.size(); x++) {
+		//					vals[x] = ALD.get(x);
+		//				}
+		//
+		//				ALALD.add(vals);
+		//				ALD.removeAll(ALD);
+		//			}
+		//
+		//			double[][] testArray = new double[ALALD.size()][ALALD.get(0).length];
+		//			for (int x = 0; x < testArray.length; x++) {
+		//				for (int y = 0; y < testArray[0].length; y++) {
+		//					testArray[x][y] = ALALD.get(x)[y];
+		//				}
+		//			}
+		//
+		//			pwIn.println("double syn0[2][50] = {");
+		//			for (int x = 0; x < testArray.length; x++) {
+		//				pwIn.print("{");
+		//				for (int y = 0; y < testArray[0].length; y++) {
+		//					if (y == testArray[0].length - 1) {
+		//						pwIn.print(testArray[x][y]);
+		//					}
+		//
+		//					else {
+		//						pwIn.print(testArray[x][y] + ", ");
+		//					}
+		//				}
+		//
+		//				if (x == testArray.length - 1) {
+		//					pwIn.println("}");
+		//				}
+		//
+		//				else {
+		//					pwIn.println("},");
+		//				}
+		//			}
+		//
+		//			pwIn.println("};");
+		//			pwIn.close();
+		//			scan1.close();
+		//			scan2.close();
+		//		}
+		//
+		//		else if (lang.toCharArray()[0] == 'p' || lang.toCharArray()[0] == 'P') {
+		//			double[] armDist = new double[2];
+		//			System.out.println("Length of arm 1");
+		//			armDist[0] = scan.nextDouble();
+		//			System.out.println("Length of arm 2");
+		//			armDist[1] = scan.nextDouble();
+		//			CustomCalculator calc = new CustomCalculator(armDist);
+		//			File pythonIn = new File("PythonInput.txt");
+		//			PrintWriter pwIn = new PrintWriter(pythonIn);
+		//			File pythonOut = new File("PythonOutput.txt");
+		//			PrintWriter pwOut = new PrintWriter(pythonOut);
+		//			System.out.println("Split for angles: ");
+		//			int numPoints = scan.nextInt();
+		//			if (numPoints != 0) {
+		//				System.out.println("Split for distance: ");
+		//				int numDist = scan.nextInt();
+		//				Point3D[] newPts = calc.generateDataPoints(numPoints, numDist);
+		//				double[][] randAngles = new double[newPts.length][3];
+		//				for (int i = 0; i < newPts.length; i++) {
+		//					double[] newValues = calc.calculateArmAngles(newPts[i]);
+		//					for (int j = 0; j < newValues.length; j++) {
+		//						randAngles[i][j] = newValues[j];
+		//					}
+		//				}
+		//
+		//				pwIn.print("([");
+		//				for (int i = 0; i < newPts.length; i++) {
+		//					if (i == newPts.length - 1) {
+		//						pwIn.print("[" + (newPts[i].getZ()) + ", " + (newPts[i].getX()) + "]");
+		//					}
+		//
+		//					else {
+		//						pwIn.println("[" + ((newPts[i].getZ())) + ", " + (newPts[i].getX()) + "], ");
+		//					}
+		//				}
+		//
+		//				pwIn.println("])");
+		//				pwOut.print("([");
+		//				for (int i = 0; i < newPts.length; i++) {
+		//					if (i == newPts.length - 1) {
+		//						pwOut.print("[" + randAngles[i][0]/360 + "]");
+		//					}
+		//
+		//					else {
+		//						pwOut.println("[" + randAngles[i][0]/360 + "], ");
+		//					}
+		//				}
+		//
+		//				pwOut.println("])");
+		//				System.out.println("Data points generated");
+		//			}
+		//
+		//			else {
+		//				Point3D[] randPts = calc.generateRandPoints(1);
+		//				double[][] randAngles = new double[1][3];
+		//				double[] newValues = calc.calculateArmAngles(randPts[0]);
+		//				for (int j = 0; j < newValues.length; j++) {
+		//					randAngles[0][j] = newValues[j];
+		//				}
+		//
+		//				System.out.println("Inputs: ");
+		//				System.out.println("([[" + (randPts[0].getZ()) + ", " + (randPts[0].getX()) + "]])");
+		//				System.out.println("Outputs: ");
+		//				System.out.println("([[" + randAngles[0][0]/360 + "]])");
+		//			}
+		//
+		//			pwOut.close();
+		//			pwIn.close();
+		//		}
+		//
+		//		else {
+		//			System.out.println("That is not a valid option");
+		//		}
+		//
 		scan.close();
 	}
 }
