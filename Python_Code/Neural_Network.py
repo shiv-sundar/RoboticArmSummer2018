@@ -893,7 +893,7 @@ Y = np.array([[0.7909913375216411],
 syn0 = 2 * np.random.random((2, 50)) - 1
 syn1 = 2 * np.random.random((50, 1)) - 1
 l0 = X
-iters = 10000000
+iters = 100000000
 prev_error = 0
 for iter in xrange(iters):
     l1 = nonlin(np.dot(l0, syn0))
@@ -904,13 +904,8 @@ for iter in xrange(iters):
         print "Average Error: " + str(prev_error/(iter + 1)) + "%"
         print str((float)(iter * 100)/iters) + "% complete"
 
-    l2_delta = l2_error * nonlin(l2, deriv=True) * .01#((float)(iter)/iters)
+    l2_delta = l2_error * nonlin(l2, deriv=True) * .05#((float)(iter)/iters)
     l1_error = l2_delta.dot(syn1.T)
-    l1_delta = l1_error * nonlin(l1, deriv=True) * .01#((float)(iter)/iters)
+    l1_delta = l1_error * nonlin(l1, deriv=True) * .05#((float)(iter)/iters)
     syn1 += l1.T.dot(l2_delta)
     syn0 += l0.T.dot(l1_delta)
-
-print "Output after training"
-l0 = np.array([[-9.592753275530992, -3.7273660815460423]])
-print nonlin(np.dot(nonlin(np.dot(l0, syn0)), syn1))
-print "Correct output" + str(0.6910162064531431)
