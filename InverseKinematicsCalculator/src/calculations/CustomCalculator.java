@@ -3,7 +3,6 @@ package calculations;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -83,10 +82,10 @@ public class CustomCalculator {
 	}
 
 	public Point3D[] generateRandPoints(int numPoints) {
-		Point3D[] randPoints = new Point3D[numPoints + 5];
+		Point3D[] randPoints = new Point3D[numPoints];
 		Random rand = new Random();
 		int i;
-		for (i = 0; i < numPoints; i++) {
+		for (i = 0; i < numPoints - 5; i++) {
 			double dist = totalLength * rand.nextDouble();
 			double angleXZ = 2 * Math.PI * rand.nextDouble();
 			double angleXZY = .5 * Math.PI * rand.nextDouble();
@@ -97,42 +96,40 @@ public class CustomCalculator {
 			randPoints[i] = new Point3D(distX, distY, distZ);
 		}
 
-		randPoints[numPoints] = new Point3D(totalLength, 0, 0);
-		randPoints[numPoints + 1] = new Point3D(-totalLength, 0, 0);
-		randPoints[numPoints + 2] = new Point3D(0, totalLength, 0);
-		randPoints[numPoints + 3] = new Point3D(0, 0, totalLength);
-		randPoints[numPoints + 4] = new Point3D(0, 0, -totalLength);
+		randPoints[numPoints - 1] = new Point3D(totalLength, 0, 0);
+		randPoints[numPoints - 2] = new Point3D(-totalLength, 0, 0);
+		randPoints[numPoints - 3] = new Point3D(0, totalLength, 0);
+		randPoints[numPoints - 4] = new Point3D(0, 0, totalLength);
+		randPoints[numPoints - 5] = new Point3D(0, 0, -totalLength);
 		return randPoints;
 	}
 
-	public Point3D[] generateDataPoints(int split, int numDist) {
-		double numXZAng = (2 * Math.PI)/split;
-		double numXZYAng = (.5 * Math.PI)/split;
-		Point3D[] dataPoints = new Point3D[(int) numDist * split * split];
-		int whichPt = 0;
-		for (int i = 0; i < split; i++) {
-			for (int j = 0; j < split; j++) {
-				for (double dist = totalLength - .005; dist > 0; dist -= totalLength/numDist) {
-					double angleXZY = 0 + (numXZYAng * i);
-					double angleXZ = 0 + (numXZAng * j);
-					double distXZ = dist * Math.cos(angleXZY);
-					double distY = Math.abs(dist * Math.sin(angleXZY));
-					double distX = distXZ * Math.cos(angleXZ);
-					double distZ = distXZ * Math.sin(angleXZ);
-					Point3D newPoint = new Point3D(distX, distY, distZ);
-					dataPoints[whichPt] = newPoint;
-					whichPt++;
-				}
-			}
-		}
-
-		return dataPoints;
-	}
+//	public Point3D[] generateDataPoints(int split, int numDist) {
+//		double numXZAng = (2 * Math.PI)/split;
+//		double numXZYAng = (.5 * Math.PI)/split;
+//		Point3D[] dataPoints = new Point3D[(int) numDist * split * split];
+//		int whichPt = 0;
+//		for (int i = 0; i < split; i++) {
+//			for (int j = 0; j < split; j++) {
+//				for (double dist = totalLength - .005; dist > 0; dist -= totalLength/numDist) {
+//					double angleXZY = 0 + (numXZYAng * i);
+//					double angleXZ = 0 + (numXZAng * j);
+//					double distXZ = dist * Math.cos(angleXZY);
+//					double distY = Math.abs(dist * Math.sin(angleXZY));
+//					double distX = distXZ * Math.cos(angleXZ);
+//					double distZ = distXZ * Math.sin(angleXZ);
+//					Point3D newPoint = new Point3D(distX, distY, distZ);
+//					dataPoints[whichPt] = newPoint;
+//					whichPt++;
+//				}
+//			}
+//		}
+//
+//		return dataPoints;
+//	}
 
 	public void servo1Array() throws FileNotFoundException {
-		Point3D[] newPts = generateRandPoints(435);
-
-
+		Point3D[] newPts = generateRandPoints(100);
 		double[] vals = new double[newPts.length];
 		File pythonIn = new File("PythonInput.txt");
 		PrintWriter pwIn = new PrintWriter(pythonIn);
@@ -170,6 +167,10 @@ public class CustomCalculator {
 		pwOut.close();
 		System.out.println("Data points generated");
 	}
+	
+	public void servo2Array() {
+		
+	}
 
 	public static void main(String[] args) throws FileNotFoundException {
 		Scanner scan = new Scanner(System.in);
@@ -180,7 +181,11 @@ public class CustomCalculator {
 		System.out.println("Length of arm 2");
 		armDist[1] = scan.nextDouble();
 		CustomCalculator calc = new CustomCalculator(armDist);
-		calc.servo1Array();
+//		Point3D[] test = calc.generateRandPoints(15);
+//		for (int x = 0; x < test.length; x++) {
+//			System.out.println(test[x]);
+//		}
+//		calc.servo1Array();
 		//		String lang = scan.next();
 		//		if (lang.toCharArray()[0] == 'a' || lang.toCharArray()[0] == 'A') {
 		//			File arduinoIn = new File("ardInput.txt");
