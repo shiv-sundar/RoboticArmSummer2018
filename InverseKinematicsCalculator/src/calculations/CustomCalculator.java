@@ -3,6 +3,7 @@ package calculations;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -104,32 +105,32 @@ public class CustomCalculator {
 		return randPoints;
 	}
 
-//	public Point3D[] generateDataPoints(int split, int numDist) {
-//		double numXZAng = (2 * Math.PI)/split;
-//		double numXZYAng = (.5 * Math.PI)/split;
-//		Point3D[] dataPoints = new Point3D[(int) numDist * split * split];
-//		int whichPt = 0;
-//		for (int i = 0; i < split; i++) {
-//			for (int j = 0; j < split; j++) {
-//				for (double dist = totalLength - .005; dist > 0; dist -= totalLength/numDist) {
-//					double angleXZY = 0 + (numXZYAng * i);
-//					double angleXZ = 0 + (numXZAng * j);
-//					double distXZ = dist * Math.cos(angleXZY);
-//					double distY = Math.abs(dist * Math.sin(angleXZY));
-//					double distX = distXZ * Math.cos(angleXZ);
-//					double distZ = distXZ * Math.sin(angleXZ);
-//					Point3D newPoint = new Point3D(distX, distY, distZ);
-//					dataPoints[whichPt] = newPoint;
-//					whichPt++;
-//				}
-//			}
-//		}
-//
-//		return dataPoints;
-//	}
+	//	public Point3D[] generateDataPoints(int split, int numDist) {
+	//		double numXZAng = (2 * Math.PI)/split;
+	//		double numXZYAng = (.5 * Math.PI)/split;
+	//		Point3D[] dataPoints = new Point3D[(int) numDist * split * split];
+	//		int whichPt = 0;
+	//		for (int i = 0; i < split; i++) {
+	//			for (int j = 0; j < split; j++) {
+	//				for (double dist = totalLength - .005; dist > 0; dist -= totalLength/numDist) {
+	//					double angleXZY = 0 + (numXZYAng * i);
+	//					double angleXZ = 0 + (numXZAng * j);
+	//					double distXZ = dist * Math.cos(angleXZY);
+	//					double distY = Math.abs(dist * Math.sin(angleXZY));
+	//					double distX = distXZ * Math.cos(angleXZ);
+	//					double distZ = distXZ * Math.sin(angleXZ);
+	//					Point3D newPoint = new Point3D(distX, distY, distZ);
+	//					dataPoints[whichPt] = newPoint;
+	//					whichPt++;
+	//				}
+	//			}
+	//		}
+	//
+	//		return dataPoints;
+	//	}
 
 	public void servo1Array() throws FileNotFoundException {
-		Point3D[] newPts = generateRandPoints(100);
+		Point3D[] newPts = generateRandPoints(500);
 		double[] vals = new double[newPts.length];
 		File pythonIn = new File("PythonInput.txt");
 		PrintWriter pwIn = new PrintWriter(pythonIn);
@@ -167,9 +168,74 @@ public class CustomCalculator {
 		pwOut.close();
 		System.out.println("Data points generated");
 	}
-	
+
+	public void printPArray() {
+		Scanner scan = new Scanner(System.in);
+		scan.useDelimiter("\r\n|[\r\n]");
+		ArrayList<Double> ALD = new ArrayList<Double>();
+		ArrayList<double[]> ALALD = new ArrayList<double[]>();
+		System.out.println("Copy the Python array:");
+		scan.useDelimiter("\r\n|[\r\n]"); 
+		String pyArray = scan.next();
+		for (int x = 0; x < 2; x++) {
+			pyArray += scan.nextLine();
+			pyArray += "\n";
+		}
+
+		Scanner scan1 = new Scanner(pyArray);
+		Scanner scan2 = null;
+		while (scan1.hasNextLine()) {
+			scan2 = new Scanner(scan1.nextLine());
+			while (scan2.hasNextDouble()) {
+				ALD.add(scan2.nextDouble());
+			}
+
+			double[] vals = new double[ALD.size()];
+			for (int x = 0; x < ALD.size(); x++) {
+				vals[x] = ALD.get(x);
+			}
+
+			ALALD.add(vals);
+			ALD.removeAll(ALD);
+		}
+
+		double[][] testArray = new double[ALALD.size()][ALALD.get(0).length];
+		for (int x = 0; x < testArray.length; x++) {
+			for (int y = 0; y < testArray[0].length; y++) {
+				testArray[x][y] = ALALD.get(x)[y];
+			}
+		}
+
+		System.out.println("([");
+		for (int x = 0; x < testArray.length; x++) {
+//			System.out.print("[");
+			for (int y = 0; y < testArray[0].length; y++) {
+				if (y == testArray[0].length - 1) {
+					System.out.println("[" + testArray[x][y] + "], ");
+				}
+
+				else {
+					System.out.print("" + testArray[x][y] + ", ");
+				}
+			}
+
+//			if (x == testArray.length - 1) {
+//				System.out.println("]");
+//			}
+//
+//			else {
+//				System.out.println("],");
+//			}
+		}
+
+		System.out.println("])");
+		scan1.close();
+		scan2.close();
+
+		scan.close();
+	}
 	public void servo2Array() {
-		
+
 	}
 
 	public static void main(String[] args) throws FileNotFoundException {
@@ -181,11 +247,22 @@ public class CustomCalculator {
 		System.out.println("Length of arm 2");
 		armDist[1] = scan.nextDouble();
 		CustomCalculator calc = new CustomCalculator(armDist);
-//		Point3D[] test = calc.generateRandPoints(15);
+//		calc.printPArray();
+//		Point3D[] test = calc.generateRandPoints(10);
+//		System.out.print("([");
 //		for (int x = 0; x < test.length; x++) {
-//			System.out.println(test[x]);
+//			System.out.println("[" + test[x].getX() + ", " + test[x].getZ() + "], ");
 //		}
-//		calc.servo1Array();
+//		
+//		System.out.println("])");
+//		for (int x = 0; x < test.length; x++) {
+//			System.out.println(calc.calculateArmAngles(test[x])[0]/360);
+//		}
+//				Point3D[] test = calc.generateRandPoints(15);
+		//		for (int x = 0; x < test.length; x++) {
+		//			System.out.println(test[x]);
+		//		}
+				calc.servo1Array();
 		//		String lang = scan.next();
 		//		if (lang.toCharArray()[0] == 'a' || lang.toCharArray()[0] == 'A') {
 		//			File arduinoIn = new File("ardInput.txt");
