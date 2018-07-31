@@ -105,29 +105,29 @@ public class CustomCalculator {
 		return randPoints;
 	}
 
-	//	public Point3D[] generateDataPoints(int split, int numDist) {
-	//		double numXZAng = (2 * Math.PI)/split;
-	//		double numXZYAng = (.5 * Math.PI)/split;
-	//		Point3D[] dataPoints = new Point3D[(int) numDist * split * split];
-	//		int whichPt = 0;
-	//		for (int i = 0; i < split; i++) {
-	//			for (int j = 0; j < split; j++) {
-	//				for (double dist = totalLength - .005; dist > 0; dist -= totalLength/numDist) {
-	//					double angleXZY = 0 + (numXZYAng * i);
-	//					double angleXZ = 0 + (numXZAng * j);
-	//					double distXZ = dist * Math.cos(angleXZY);
-	//					double distY = Math.abs(dist * Math.sin(angleXZY));
-	//					double distX = distXZ * Math.cos(angleXZ);
-	//					double distZ = distXZ * Math.sin(angleXZ);
-	//					Point3D newPoint = new Point3D(distX, distY, distZ);
-	//					dataPoints[whichPt] = newPoint;
-	//					whichPt++;
-	//				}
-	//			}
-	//		}
-	//
-	//		return dataPoints;
-	//	}
+	public Point3D[] generateDataPoints(int split, int numDist) {
+		double numXZAng = (2 * Math.PI)/split;
+		double numXZYAng = (.5 * Math.PI)/split;
+		Point3D[] dataPoints = new Point3D[(int) numDist * split * split];
+		int whichPt = 0;
+		for (int i = 0; i < split; i++) {
+			for (int j = 0; j < split; j++) {
+				for (double dist = totalLength - .005; dist > 0; dist -= totalLength/numDist) {
+					double angleXZY = 0 + (numXZYAng * i);
+					double angleXZ = 0 + (numXZAng * j);
+					double distXZ = dist * Math.cos(angleXZY);
+					double distY = Math.abs(dist * Math.sin(angleXZY));
+					double distX = distXZ * Math.cos(angleXZ);
+					double distZ = distXZ * Math.sin(angleXZ);
+					Point3D newPoint = new Point3D(distX, distY, distZ);
+					dataPoints[whichPt] = newPoint;
+					whichPt++;
+				}
+			}
+		}
+
+		return dataPoints;
+	}
 
 	public void servo1Array() throws FileNotFoundException {
 		Point3D[] newPts = generateRandPoints(500);
@@ -136,7 +136,7 @@ public class CustomCalculator {
 		PrintWriter pwIn = new PrintWriter(pythonIn);
 		pwIn.print("([");
 		for (int x = 0; x < newPts.length; x++) {
-			vals[x] = (calculateArmAngles(newPts[x])[0])/360;
+			vals[x] = (calculateArmAngles(newPts[x])[0]);
 		}
 
 		for (int i = 0; i < newPts.length; i++) {
@@ -208,7 +208,7 @@ public class CustomCalculator {
 
 		System.out.println("([");
 		for (int x = 0; x < testArray.length; x++) {
-//			System.out.print("[");
+			//			System.out.print("[");
 			for (int y = 0; y < testArray[0].length; y++) {
 				if (y == testArray[0].length - 1) {
 					System.out.println("[" + testArray[x][y] + "], ");
@@ -219,13 +219,13 @@ public class CustomCalculator {
 				}
 			}
 
-//			if (x == testArray.length - 1) {
-//				System.out.println("]");
-//			}
-//
-//			else {
-//				System.out.println("],");
-//			}
+			//			if (x == testArray.length - 1) {
+			//				System.out.println("]");
+			//			}
+			//
+			//			else {
+			//				System.out.println("],");
+			//			}
 		}
 
 		System.out.println("])");
@@ -247,21 +247,21 @@ public class CustomCalculator {
 		System.out.println("Length of arm 2");
 		armDist[1] = scan.nextDouble();
 		CustomCalculator calc = new CustomCalculator(armDist);
-//		calc.printPArray();
+		//		calc.printPArray();
 //		Point3D[] test = calc.generateRandPoints(10);
 //		System.out.print("([");
 //		for (int x = 0; x < test.length; x++) {
 //			System.out.println("[" + test[x].getX() + ", " + test[x].getZ() + "], ");
 //		}
-//		
+//
 //		System.out.println("])");
 //		for (int x = 0; x < test.length; x++) {
 //			System.out.println(calc.calculateArmAngles(test[x])[0]/360);
 //		}
-//				Point3D[] test = calc.generateRandPoints(15);
-		//		for (int x = 0; x < test.length; x++) {
-		//			System.out.println(test[x]);
-		//		}
+		//						Point3D[] test = calc.generateRandPoints(15);
+		//				for (int x = 0; x < test.length; x++) {
+		//					System.out.println(test[x]);
+		//				}
 				calc.servo1Array();
 		//		String lang = scan.next();
 		//		if (lang.toCharArray()[0] == 'a' || lang.toCharArray()[0] == 'A') {
