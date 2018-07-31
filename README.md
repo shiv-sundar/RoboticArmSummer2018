@@ -3,7 +3,7 @@ A robotic arm featuring a neural network
 
 The primary purpose of this project is to demonstrate my understanding of graduate level concepts such as inverse kinematics and artificial intelligence. 
 
-Secondly, this is to share with anyone interested my process for completing the task of creating an artificially intelligent robotic arm, which follows: 
+Secondly, this is to share my process for completing the task of creating an artificially intelligent robotic arm, which follows: 
 
   1. Generate training data sets that take various inputs and create the required outputs.
   2. Train multiple neural networks to model inverse kinematic functions.
